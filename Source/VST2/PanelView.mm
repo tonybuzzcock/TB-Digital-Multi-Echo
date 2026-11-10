@@ -695,7 +695,7 @@ void strokeLine (CGFloat x0, CGFloat y0, CGFloat x1, CGFloat y1, CGFloat w)
             default: break;
         }
     }
-    drawText ("FOOTSWITCH", boldFont (8.5), ink, 340, 366);
+    drawText ("FOOTSWITCH", boldFont (8.5), ink, 340, 357);
     [self drawPresets];
     [self drawReadout];
 }
