@@ -81,8 +81,8 @@ Not on the drawing, so estimated (all named constants in `Source/DSP/MultiEcho.c
 
 On the Mac the plugin opens its own panel (1200 × 440), laid out like the
 unit: the knob row (Volume, Volume, Reverb, Echo Volume, Repeat Volume, Bass,
-Treble) with gold caps and orange skirts, and the lower rail with the input
-jacks and their Echo switches, the ECHO 1–4 and REPEAT A–D push buttons (each
+Treble) with gold caps and dark grey knurled skirts, and the lower rail with the input
+jacks and their Echo switches, the red ECHO 1–4 and black REPEAT A–D push buttons (each
 lights its lamp when it's in), the output jacks and the Overload lamp. The
 strip along the bottom has the TB Electronic mark, Echo Rate, the footswitch
 rockers, Dry, Output, the presets and the readout.

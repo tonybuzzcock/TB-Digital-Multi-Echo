@@ -1,7 +1,7 @@
 // PanelView.mm
 // The custom panel for TB Digital Multi Echo, laid out like the Multi-Echo's
 // front panel: a silver faceplate between black end cheeks, a row of gold-capped
-// knobs with orange skirts over black tick scales, and a lower rail with the
+// knobs with dark grey knurled skirts over black tick scales, and a lower rail with the
 // input jacks and Echo switches, the ECHO 1-4 and REPEAT A-D push buttons, the
 // output jacks and the Overload lamp. Original artwork (no maker's logo); the
 // TB Electronic mark sits in the plugin strip along the bottom with Echo Rate,
@@ -428,7 +428,7 @@ void strokeLine (CGFloat x0, CGFloat y0, CGFloat x1, CGFloat y1, CGFloat w)
     }
 }
 
-// Gold-capped knob with an orange skirt and a black pointer line.
+// Gold-capped knob with a dark grey knurled skirt and a black pointer line.
 - (void) drawKnobAt: (NSPoint) ctr radius: (CGFloat) r value: (CGFloat) v
 {
     // Drop shadow
@@ -438,26 +438,31 @@ void strokeLine (CGFloat x0, CGFloat y0, CGFloat x1, CGFloat y1, CGFloat w)
     [sh setShadowBlurRadius: 4.0];
     [sh setShadowColor: [NSColor colorWithCalibratedWhite: 0.0 alpha: 0.45]];
     [sh set];
-    [rgb (190, 96, 20) set];
+    [rgb (90, 93, 97) set];
     [[NSBezierPath bezierPathWithOvalInRect: NSMakeRect (ctr.x - r, ctr.y - r, 2 * r, 2 * r)] fill];
     [NSGraphicsContext restoreGraphicsState];
 
-    // Orange skirt with fine fluting
-    NSBezierPath* skirt = [NSBezierPath bezierPathWithOvalInRect: NSMakeRect (ctr.x - r, ctr.y - r, 2 * r, 2 * r)];
-    NSGradient* sg = [[[NSGradient alloc] initWithStartingColor: rgb (255, 178, 70) endingColor: rgb (196, 92, 14)] autorelease];
-    [sg drawInBezierPath: skirt angle: -60.0];
-    const int flutes = 36;
-    for (int k = 0; k < flutes; ++k)
+    // Dark grey knurled skirt (as on the TB Copicat): alternating ridges, lit from the top left
+    const int ridges = 40;
+    for (int k = 0; k < ridges; ++k)
     {
-        const CGFloat a0 = (CGFloat) (2.0 * M_PI * k / flutes);
+        const CGFloat a0 = (CGFloat) (2.0 * M_PI * k / ridges);
+        const CGFloat a1 = (CGFloat) (2.0 * M_PI * (k + 0.5) / ridges);
+        NSBezierPath* w = [NSBezierPath bezierPath];
+        [w moveToPoint: ctr];
+        [w lineToPoint: polar (ctr.x, ctr.y, r, a0)];
+        [w lineToPoint: polar (ctr.x, ctr.y, r, a1)];
+        [w closePath];
         const CGFloat lit = 0.5 + 0.5 * std::cos (a0 + 0.8);
-        [rgba (255, 236, 200, 0.10 + 0.25 * lit) set];
-        strokeLine (polar (ctr.x, ctr.y, r * 0.80, a0).x, polar (ctr.x, ctr.y, r * 0.80, a0).y,
-                    polar (ctr.x, ctr.y, r * 0.98, a0).x, polar (ctr.x, ctr.y, r * 0.98, a0).y, 1.0);
+        [[NSColor colorWithCalibratedWhite: 0.26 + 0.20 * lit alpha: 1.0] set];
+        [w fill];
     }
-    [rgb (150, 70, 10) set];
-    [skirt setLineWidth: 0.8];
-    [skirt stroke];
+    {
+        NSBezierPath* rim = [NSBezierPath bezierPathWithOvalInRect: NSMakeRect (ctr.x - r, ctr.y - r, 2 * r, 2 * r)];
+        [rgb (40, 41, 44) set];
+        [rim setLineWidth: 0.8];
+        [rim stroke];
+    }
 
     // Gold cap with turned rings and a highlight
     const CGFloat rc = r * 0.74;
@@ -488,10 +493,12 @@ void strokeLine (CGFloat x0, CGFloat y0, CGFloat x1, CGFloat y1, CGFloat w)
     [line stroke];
 }
 
-// Black latching push button: raised when out, pressed down when in, with a small lamp above.
+// Latching push button: raised when out, pressed down when in, with a small lamp above.
+// ECHO 1-4 are red, REPEAT A-D black.
 - (void) drawButton: (const Ctl&) c
 {
     const bool in = isOn (shown[c.param]);
+    const bool red = c.param >= kEcho1 && c.param <= kEcho4;
     const NSRect well = NSMakeRect (c.cx - kButtonW * 0.5 - 2, c.cy - kButtonH * 0.5 - 2, kButtonW + 4, kButtonH + 4);
     [rgb (16, 16, 18) set];
     [[NSBezierPath bezierPathWithRoundedRect: well xRadius: 2 yRadius: 2] fill];
@@ -509,17 +516,23 @@ void strokeLine (CGFloat x0, CGFloat y0, CGFloat x1, CGFloat y1, CGFloat w)
         [sh setShadowColor: [NSColor colorWithCalibratedWhite: 0.0 alpha: 0.7]];
         [sh set];
     }
-    NSGradient* g = in
-        ? [[[NSGradient alloc] initWithStartingColor: rgb (18, 18, 20) endingColor: rgb (34, 34, 37)] autorelease]
-        : [[[NSGradient alloc] initWithStartingColor: rgb (78, 79, 83) endingColor: rgb (24, 24, 26)] autorelease];
+    NSGradient* g;
+    if (red)
+        g = in
+            ? [[[NSGradient alloc] initWithStartingColor: rgb (122, 16, 14) endingColor: rgb (158, 26, 22)] autorelease]
+            : [[[NSGradient alloc] initWithStartingColor: rgb (232, 66, 56) endingColor: rgb (150, 20, 16)] autorelease];
+    else
+        g = in
+            ? [[[NSGradient alloc] initWithStartingColor: rgb (18, 18, 20) endingColor: rgb (34, 34, 37)] autorelease]
+            : [[[NSGradient alloc] initWithStartingColor: rgb (78, 79, 83) endingColor: rgb (24, 24, 26)] autorelease];
     [g drawInBezierPath: cp angle: -90.0];
     [NSGraphicsContext restoreGraphicsState];
     if (! in)
     {
-        [rgba (255, 255, 255, 0.22) set];
+        [rgba (255, 255, 255, red ? 0.35 : 0.22) set];
         NSRectFill (NSMakeRect (NSMinX (cap) + 3, NSMinY (cap) + 1.5, cap.size.width - 6, 1.0));
     }
-    [rgb (8, 8, 9) set];
+    [(red ? rgb (70, 8, 6) : rgb (8, 8, 9)) set];
     [cp setLineWidth: 0.8];
     [cp stroke];
 
