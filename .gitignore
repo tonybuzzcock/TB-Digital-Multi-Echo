@@ -1,0 +1,8 @@
+Tests/multiecho_test
+Tests/renders/
+*.o
+.DS_Store
+build/
+Tests/vst_host_test
+Tests/*.so
+Tests/preset_test
