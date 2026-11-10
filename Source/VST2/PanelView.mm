@@ -2,7 +2,7 @@
 // The custom panel for TB Digital Multi Echo, laid out like the Multi-Echo's
 // front panel: a silver faceplate between black end cheeks, a row of gold-capped
 // knobs with dark grey knurled skirts over black tick scales, and a lower rail with the
-// input jacks and Echo switches, the ECHO 1-4 and REPEAT A-D push buttons, the
+// input jacks and Echo switches, the lit ECHO 1-4 and REPEAT A-D push buttons, the
 // output jacks and the Overload lamp. Original artwork (no maker's logo); the
 // TB Electronic mark sits in the plugin strip along the bottom with Echo Rate,
 // the footswitch functions, Dry, Output, the presets and the readout.
@@ -493,8 +493,9 @@ void strokeLine (CGFloat x0, CGFloat y0, CGFloat x1, CGFloat y1, CGFloat w)
     [line stroke];
 }
 
-// Latching push button: raised when out, pressed down when in, with a small lamp above.
-// ECHO 1-4 are red, REPEAT A-D black.
+// Latching push button: raised when out, pressed down and lit when in, with a small lamp above.
+// ECHO 1-4 glow bright red when in and sit dark red when out; REPEAT A-D glow
+// light grey when in and are black when out.
 - (void) drawButton: (const Ctl&) c
 {
     const bool in = isOn (shown[c.param]);
@@ -507,32 +508,46 @@ void strokeLine (CGFloat x0, CGFloat y0, CGFloat x1, CGFloat y1, CGFloat w)
     NSRect cap = NSMakeRect (c.cx - kButtonW * 0.5 + inset, c.cy - kButtonH * 0.5 + inset, kButtonW - 2 * inset, kButtonH - 2 * inset);
     if (! in) cap.origin.y -= 1.0;
     NSBezierPath* cp = [NSBezierPath bezierPathWithRoundedRect: cap xRadius: 2 yRadius: 2];
+
+    // Glow: a soft halo round the lit cap
+    NSColor* glowCol = red ? rgba (255, 60, 40, 0.95) : rgba (235, 238, 242, 0.9);
     [NSGraphicsContext saveGraphicsState];
-    if (! in)
+    NSShadow* sh = [[[NSShadow alloc] init] autorelease];
+    if (in)
     {
-        NSShadow* sh = [[[NSShadow alloc] init] autorelease];
+        [sh setShadowOffset: NSMakeSize (0.0, 0.0)];
+        [sh setShadowBlurRadius: 9.0];
+        [sh setShadowColor: glowCol];
+    }
+    else
+    {
         [sh setShadowOffset: NSMakeSize (0.0, -2.0)];
         [sh setShadowBlurRadius: 2.0];
         [sh setShadowColor: [NSColor colorWithCalibratedWhite: 0.0 alpha: 0.7]];
-        [sh set];
     }
-    NSGradient* g;
-    if (red)
-        g = in
-            ? [[[NSGradient alloc] initWithStartingColor: rgb (122, 16, 14) endingColor: rgb (158, 26, 22)] autorelease]
-            : [[[NSGradient alloc] initWithStartingColor: rgb (232, 66, 56) endingColor: rgb (150, 20, 16)] autorelease];
-    else
-        g = in
-            ? [[[NSGradient alloc] initWithStartingColor: rgb (18, 18, 20) endingColor: rgb (34, 34, 37)] autorelease]
-            : [[[NSGradient alloc] initWithStartingColor: rgb (78, 79, 83) endingColor: rgb (24, 24, 26)] autorelease];
-    [g drawInBezierPath: cp angle: -90.0];
+    [sh set];
+    [(in ? glowCol : rgb (16, 16, 18)) set];
+    [cp fill];
     [NSGraphicsContext restoreGraphicsState];
-    if (! in)
+
+    // Cap face: lit ones are brightest in the middle, unlit ones shaded top to bottom
+    if (in)
     {
-        [rgba (255, 255, 255, red ? 0.35 : 0.22) set];
+        NSGradient* lit = red
+            ? [[[NSGradient alloc] initWithStartingColor: rgb (255, 150, 128) endingColor: rgb (232, 34, 22)] autorelease]
+            : [[[NSGradient alloc] initWithStartingColor: rgb (255, 255, 255) endingColor: rgb (196, 199, 204)] autorelease];
+        [lit drawInBezierPath: cp relativeCenterPosition: NSMakePoint (0.0, 0.0)];
+    }
+    else
+    {
+        NSGradient* dark = red
+            ? [[[NSGradient alloc] initWithStartingColor: rgb (128, 24, 20) endingColor: rgb (66, 8, 6)] autorelease]
+            : [[[NSGradient alloc] initWithStartingColor: rgb (64, 65, 69) endingColor: rgb (14, 14, 16)] autorelease];
+        [dark drawInBezierPath: cp angle: -90.0];
+        [rgba (255, 255, 255, 0.18) set];
         NSRectFill (NSMakeRect (NSMinX (cap) + 3, NSMinY (cap) + 1.5, cap.size.width - 6, 1.0));
     }
-    [(red ? rgb (70, 8, 6) : rgb (8, 8, 9)) set];
+    [(red ? rgb (60, 6, 4) : rgb (8, 8, 9)) set];
     [cp setLineWidth: 0.8];
     [cp stroke];
 
