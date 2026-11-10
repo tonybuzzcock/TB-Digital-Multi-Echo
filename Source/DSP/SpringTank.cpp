@@ -34,11 +34,12 @@ void SpringTank::prepare (double sampleRate)
         s.apCoeff = (i == 0) ? 0.62 : 0.58;
     }
 
-    // Transducer bandwidth
-    inHP.setHighPass (fs, 110.0, 0.707);
-    inLP.setLowPass (fs, 4500.0, 0.707);
-    outLP.setLowPass (fs, 4200.0, 0.6);
-    lpCoeff = 1.0 - std::exp (-2.0 * kPi * 3500.0 / fs);   // per-trip high-frequency loss
+    // Transducer bandwidth (kept below Nyquist at low sample rates)
+    const double lim = 0.45 * fs;
+    inHP.setHighPass (fs, 110.0 < lim ? 110.0 : lim, 0.707);
+    inLP.setLowPass (fs, 4500.0 < lim ? 4500.0 : lim, 0.707);
+    outLP.setLowPass (fs, 4200.0 < lim ? 4200.0 : lim, 0.6);
+    lpCoeff = 1.0 - std::exp (-2.0 * kPi * (3500.0 < lim ? 3500.0 : lim) / fs);   // per-trip high-frequency loss
 
     reset();
 }

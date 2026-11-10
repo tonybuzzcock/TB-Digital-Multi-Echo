@@ -397,7 +397,22 @@ int main (int argc, char** argv)
             for (size_t i = 0; i < n.size(); ++i) { s2 = s2 * 1664525u + 1013904223u; n[i] = (float) (8.0 * ((s2 >> 8) / 8388608.0 - 1.0)); }
             ok = ok && allFinite (run (a, n), 200.0);
         }
-        std::printf ("  %d runs plus loud noise\n", runs);
+        {
+            // Odd and extreme sample rates (hosts and validators try these)
+            const double rates[4] = { 1234.57, 8000.0, 192000.0, 384000.0 };
+            for (int k = 0; k < 4 && ok; ++k)
+            {
+                MultiEcho* t = new MultiEcho();
+                defaults (*t); t->setRepeatVolume (0.8); t->setReverb (0.8);
+                t->prepare (rates[k]);
+                std::vector<float> in ((size_t) rates[k]), out (in.size());
+                for (size_t i = 0; i < in.size(); ++i) in[i] = (float) (0.5 * std::sin (0.3 * (double) i));
+                t->process (&in[0], &in[0], &out[0], (int) in.size());
+                ok = allFinite (out, 200.0);
+                delete t;
+            }
+        }
+        std::printf ("  %d runs plus loud noise and 4 odd sample rates\n", runs);
         check (ok, "no NaNs or blow-ups at any setting");
     }
 
