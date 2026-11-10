@@ -91,7 +91,7 @@ Drag knobs up/down (hold Shift for fine control), double-click a knob to reset
 it, or use the scroll wheel. Click a button or slide switch to toggle it.
 Rocker switches: press the top half for On/In, the bottom half for Off/Out.
 
-**Presets:** click SAVE, then a slot 1–8. Click a saved slot to recall it.
+**Presets:** click SAVE, then a slot 1–8. Click a saved slot to recall it; the slot in use lights orange.
 Presets are shared by every instance, in
 `~/Library/Application Support/TB/TB Digital Multi Echo/Presets.txt`.
 

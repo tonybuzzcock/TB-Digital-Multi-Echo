@@ -647,7 +647,7 @@ void strokeLine (CGFloat x0, CGFloat y0, CGFloat x1, CGFloat y1, CGFloat w)
     {
         const NSRect r = slotRect (k);
         NSBezierPath* bp = [NSBezierPath bezierPathWithRoundedRect: r xRadius: 3 yRadius: 3];
-        NSColor* fill = (k == activePreset) ? rgb (178, 245, 96) : (presetUsed[k] ? rgb (46, 47, 50) : rgb (214, 216, 219));
+        NSColor* fill = (k == activePreset) ? rgb (255, 150, 40) : (presetUsed[k] ? rgb (46, 47, 50) : rgb (214, 216, 219));
         NSColor* text = (k == activePreset) ? ink : (presetUsed[k] ? [NSColor whiteColor] : rgb (120, 122, 126));
         [fill set];
         [bp fill];
