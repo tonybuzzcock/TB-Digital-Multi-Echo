@@ -4,7 +4,7 @@
 # libraries that exist on 10.8. Run on macOS (GitHub's Intel runner or any Mac
 # with Xcode command line tools):
 #
-#   scripts/build_vst_mac.sh   -> "build/TB Digital Multi Echo.vst", build/TB-Digital-Multi-Echo-mac-vst.zip
+#   scripts/build_vst_mac.sh   -> "build/TB Digital Multi Echo.vst", build/TB-Digital-Multi-Echo-mountain-lion-vst.zip
 
 set -euo pipefail
 
@@ -12,7 +12,7 @@ cd "$(dirname "$0")/.."
 OUT=build
 NAME="TB Digital Multi Echo"
 EXE=TBDigitalMultiEcho
-ZIP=TB-Digital-Multi-Echo-mac-vst.zip
+ZIP=TB-Digital-Multi-Echo-mountain-lion-vst.zip
 BUNDLE="$OUT/$NAME.vst"
 MIN_OS=10.8
 

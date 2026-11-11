@@ -97,7 +97,7 @@ Presets are shared by every instance, in
 
 ## Install
 
-1. GitHub → Actions → latest run → Artifacts → `TB-Digital-Multi-Echo-mac-vst`
+1. GitHub → Actions → latest run → Artifacts → `TB-Digital-Multi-Echo-mountain-lion-vst`
 2. Unzip twice to get `TB Digital Multi Echo.vst`
 3. Copy it to `/Library/Audio/Plug-Ins/VST/` and rescan in PatchWork
 
