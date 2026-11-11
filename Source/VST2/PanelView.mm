@@ -4,7 +4,7 @@
 // knobs with dark grey knurled skirts over black tick scales, and a lower rail with the
 // input jacks and Echo switches, the lit ECHO 1-4 and REPEAT A-D push buttons, the
 // output jacks and the Overload lamp. Original artwork (no maker's logo); the
-// TB Electronic mark sits in the plugin strip along the bottom with Echo Rate,
+// TB electronic logo sits in the plugin strip along the bottom with Echo Rate,
 // the footswitch functions, Dry, Output, the presets and the readout.
 //
 // Cocoa, manual retain/release, and only APIs that exist in Mac OS X 10.8.
@@ -15,6 +15,7 @@
 #include "Editor.h"
 #include "Params.h"
 #include "Presets.h"
+#include "TBLogo.h"
 
 #include <cmath>
 #include <cstdio>
@@ -117,29 +118,6 @@ NSFont* lightFont (CGFloat size)
 {
     NSFont* f = [NSFont fontWithName: @"Helvetica-Light" size: size];
     return f ? f : plainFont (size);
-}
-
-NSFont* firstFont (const char* const* names, int count, CGFloat size, NSFont* fallback)
-{
-    for (int i = 0; i < count; ++i)
-    {
-        NSFont* f = [NSFont fontWithName: [NSString stringWithUTF8String: names[i]] size: size];
-        if (f) return f;
-    }
-    return fallback;
-}
-
-// Eurostile for the TB mark when it is installed (it cannot be bundled), else Helvetica.
-NSFont* markBoldFont (CGFloat size)
-{
-    const char* const names[] = { "Eurostile-Bold", "EurostileBold", "Eurostile-Heavy", "EurostileLTStd-Bold", "EurostileT-Bold" };
-    return firstFont (names, 5, size, boldFont (size));
-}
-
-NSFont* markPlainFont (CGFloat size)
-{
-    const char* const names[] = { "Eurostile", "Eurostile-Regular", "EurostileLTStd", "EurostileT-Regular" };
-    return firstFont (names, 4, size, plainFont (size));
 }
 
 void drawText (const char* s, NSFont* font, NSColor* color, CGFloat cx, CGFloat cy)
@@ -357,9 +335,8 @@ void strokeLine (CGFloat x0, CGFloat y0, CGFloat x1, CGFloat y1, CGFloat w)
     }
     drawText ("UNIT", lightFont (11.0), ink, 1106, 146);
 
-    // Owner's mark in the strip's corner: red TB over "Electronic", straight on the silver
-    drawText ("TB", markBoldFont (28.0), rgb (200, 30, 30), 76, 385);
-    drawText ("Electronic", markPlainFont (12.0), ink, 76, 408);
+    // The TB electronic logo in the strip's corner, straight on the silver
+    tblogo::drawTBLogo (NSMakeRect (16.0, 354.0, 130.0, 72.0));
 }
 
 - (void) drawJackAt: (CGFloat) cx black: (bool) black

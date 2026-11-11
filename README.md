@@ -84,7 +84,7 @@ unit: the knob row (Volume, Volume, Reverb, Echo Volume, Repeat Volume, Bass,
 Treble) with gold caps and dark grey knurled skirts, and the lower rail with the input
 jacks and their Echo switches, the ECHO 1–4 and REPEAT A–D push buttons (ECHO glows bright red when in,
 dark red when out; REPEAT glows light grey when in, black when out), the output jacks and the Overload lamp. The
-strip along the bottom has the TB Electronic mark, Echo Rate, the footswitch
+strip along the bottom has the TB electronic logo, Echo Rate, the footswitch
 rockers, Dry, Output, the presets and the readout.
 
 Drag knobs up/down (hold Shift for fine control), double-click a knob to reset
